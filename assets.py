@@ -16,6 +16,7 @@ def reset_fields():
     st.session_state["inc_desc"] = None
     st.session_state["inc_amt"] = None
     st.session_state["inc_type"] = None
+    st.session_state["pdf"] = None
 
 
 def center_title(pos, size, color, title, align="center"):
@@ -36,9 +37,10 @@ class Fetch:
     def __init__(self):
         self.connection = sq.connect("spendit.db")
 
-    def all_data(self):
+    def all_data(self, user):
+        data = (user, )
         cursor = self.connection.cursor()
-        cursor.execute("SElECT * FROM report")
+        cursor.execute("SElECT date, month, category, type, amount, description FROM report where user=?", data)
         users = cursor.fetchall()
         # users = [i[0] for i in users]
         return users
@@ -180,7 +182,7 @@ class Upload(Fetch):
 
     def add_data(self, cat, typ, amt, desc):
         amt = str(amt)
-        data = (tt.strftime("%d-%m-%y"), tt.strftime("%B"), cat, typ, amt, desc)
+        data = (tt.strftime("%d-%m-%y"), tt.strftime("%B"), cat, typ, amt, desc, st.session_state.username)
         if amt.startswith("0"):
             amt = amt[1:]
 
@@ -189,7 +191,7 @@ class Upload(Fetch):
             return
 
         cursor = self.connection.cursor()
-        cursor.execute("INSERT INTO report VALUES (?,?,?,?,?,?)", data)
+        cursor.execute("INSERT INTO report VALUES (?,?,?,?,?,?,?)", data)
         self.connection.commit()
 
     def edit_pfp(self, usr, pfp):
@@ -218,6 +220,3 @@ class Upload(Fetch):
             cursor = self.connection.cursor()
             cursor.execute(f"INSERT INTO types ({cat.lower()}) VALUES (?)", other)
             self.connection.commit()
-
-s = Upload()
-print(s.all_data())

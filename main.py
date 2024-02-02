@@ -32,7 +32,10 @@ class Multiapp:
             else:
                 center_title("mid", 55, "red", "<br><br><br>⚠️ Login to save your inputs")
         if option == "Report":
-            Report.app()
+            if st.session_state.username != "":
+                Report.app()
+            else:
+                center_title("mid", 55, "red", "<br><br><br>⚠️ Login to view your report")
 
         # st.session_state
     run()

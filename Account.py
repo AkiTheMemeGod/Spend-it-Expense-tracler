@@ -89,6 +89,7 @@ def app():
                     st.session_state.username = username
                     st.session_state.pfp = auth.pfp(username)
                     st.session_state.useremail = auth.email(username)
+                    st.session_state.pdf = ""
 
                 else:
                     st.error("Wrong Password")
@@ -105,6 +106,7 @@ def app():
         st.session_state.username = ""
         st.session_state.pfp = ""
         st.session_state.useremail = ""
+        st.session_state.pdf = ""
 
 
     if "signedout" not in st.session_state:

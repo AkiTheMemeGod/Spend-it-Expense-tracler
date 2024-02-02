@@ -9,7 +9,7 @@ def app():
     c1, c2, c3 = st.columns([1, 8, 1])
     with c2:
         rep = Upload()
-        df = pd.DataFrame(rep.all_data(), columns=["Date", "Month", "Category", "Type", "Amount", "Description"])
+        df = pd.DataFrame(rep.all_data(user=st.session_state.username), columns=["Date", "Month", "Category", "Type", "Amount", "Description"])
         # st.dataframe(df)
         with st.sidebar:
 
@@ -39,22 +39,23 @@ def app():
                 # rep = Upload()
                 PDFbyte = reps.generate_pdf(df_selection)
                 base64_pdf = base64.b64encode(PDFbyte).decode('utf-8')
+                st.session_state.pdf = PDFbyte
 
                 pdf_display = F'<iframe src="data:application/pdf;base64,{base64_pdf}" width="1300" height="1000" type="application/pdf"></iframe>'
                 # pdf_display = F'<object data={base64_pdf} type="application/pdf" width="100%" height="100%"><p>Alternative text - include a link <a href="myfile.pdf">to the PDF!</a></p></object>'
-                st.markdown(pdf_display, unsafe_allow_html=True)
-                down = st.download_button(label=":blue[Download Report]",
-                                          data=PDFbyte,
-                                          file_name="report.pdf",
-                                          mime='application/octet-stream',
-                                          use_container_width=True)
-                if down:
-                    st.sidebar.success("Downloaded Successfully")
+                # st.markdown(pdf_display, unsafe_allow_html=True)
 
             clicked = st.button(label="Generate Report", on_click= lambda: display(rep), use_container_width=True)
 
             if clicked:
-                st.sidebar.success("Downloaded Successfully")
+                down = st.sidebar.download_button(label=":blue[Download Report]",
+                                                  data=st.session_state.pdf,
+                                                  file_name="report.pdf",
+                                                  on_click=reset_fields,
+                                                  mime='application/octet-stream',
+                                                  use_container_width=True)
+                if down:
+                    st.sidebar.success("Downloaded Successfully")
 
         center_title("s", 60, "#E23D9F", "📃Report", "center")
         co1, co2, co3 = st.columns([1, 8, 1])
