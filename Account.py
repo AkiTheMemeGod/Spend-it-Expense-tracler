@@ -135,10 +135,10 @@ def app():
                 usr_pfp = st.file_uploader(label="Profile picture", type=['png', 'jpeg', ])
 
                 if st.button('Create my account', use_container_width=True):
-                    if usr_pfp is not None and username is not "" and password is not "":
+                    if usr_pfp is not None and username != "" and password != "":
                         acc.account(username, password, email, usr_pfp.read())
                         st.session_state["radios"].index = 0
-                    elif username is not "" and password is not "":
+                    elif username != "" and password != "":
                         acc.account(username, password, email, open("dependencies/pfp.png", "rb").read())
                     else:
                         st.error(":red[No empty fields please]")
