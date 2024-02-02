@@ -1,5 +1,4 @@
 import base64
-import struct
 import pandas as pd
 import plotly.express as px
 from assets import *
@@ -36,15 +35,15 @@ def app():
 
             # st.page_link(page="./main.py", label="Generate pdf")
             # st.page_link(page="pages/pdf.py", label="Generate pdf")
-            def display(rep):
+            def display(reps):
                 # rep = Upload()
-                PDFbyte = rep.generate_pdf(df_selection)
+                PDFbyte = reps.generate_pdf(df_selection)
                 base64_pdf = base64.b64encode(PDFbyte).decode('utf-8')
 
                 pdf_display = F'<iframe src="data:application/pdf;base64,{base64_pdf}" width="1300" height="1000" type="application/pdf"></iframe>'
                 # pdf_display = F'<object data={base64_pdf} type="application/pdf" width="100%" height="100%"><p>Alternative text - include a link <a href="myfile.pdf">to the PDF!</a></p></object>'
                 st.markdown(pdf_display, unsafe_allow_html=True)
-                down = st.download_button(label=":red[Download Report]",
+                down = st.download_button(label=":blue[Download Report]",
                                           data=PDFbyte,
                                           file_name="report.pdf",
                                           mime='application/octet-stream',
