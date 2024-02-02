@@ -6,25 +6,45 @@ from dependencies.encrypter import encrypt
 def app():
 
     with st.sidebar:
-        st.sidebar.markdown("---")
+        center_title("side", 45, "#EBA0F6", "$pend It.", "center")
+        c1, c2, c3 = st.columns([1.6, 4, 1])
+        with c2:
+            try:
+                if st.session_state.username:
+                    st.markdown("""
+                                    <style>
+                                    .st-emotion-cache-1v0mbdj > img{
+                                        border-radius: 50%;
+                                        text-align: center;
+                                        }
+                                    </style>
+                                    """, unsafe_allow_html=True)
+                    st.image(st.session_state.pfp,
+                             width=150,
+                             caption=f"Welcome back : {st.session_state.username}")
+            except AttributeError:
+                pass
+        try:
+            if st.session_state.username:
+                with st.expander(label="EDIT 🖊️"):
+                    center_title("s", 20, "#E23D9F", "🖼️CHANGE DISPLAY PICTURE", "center")
 
-        center_title("s", 35, "#E23D9F", "🖼️DISPLAY PICTURE", "center")
+                    new_pfp = st.file_uploader("profile pic", type=['png', 'jpeg', ], label_visibility="hidden")
 
-        new_pfp = st.file_uploader("profile pic", type=['png', 'jpeg', ], label_visibility="hidden")
+                    st.sidebar.markdown("###")
+                    pfp = st.button('Change Profile Picture', use_container_width=True)
+                    if pfp:
+                        if new_pfp is not None:
 
-        st.sidebar.markdown("###")
-        pfp = st.button('Change Profile Picture', use_container_width=True)
-        if pfp:
-            if new_pfp is not None:
+                            new = Upload()
+                            new.edit_pfp(st.session_state.username, new_pfp.read())
+                            st.session_state.pfp = new_pfp
+                            st.success("Your DP has been changed!")
 
-                new = Upload()
-                new.edit_pfp(st.session_state.username, new_pfp.read())
-                st.session_state.pfp = new_pfp
-
-            else:
-                st.sidebar.error("Upload a file to change profile pic")
-
-        st.sidebar.markdown("---")
+                        else:
+                            st.sidebar.error("Upload a file to change profile pic")
+        except AttributeError:
+            pass
 
         """center_title("s", 35, "#E23D9F", "🗑️DELETE ALL MY DATA", "center")
 
@@ -32,8 +52,8 @@ def app():
         if delete:
             st.sidebar.button("Are you sure ?", use_container_width=True, type="primary")
         st.sidebar.markdown("---")"""
-
-        center_title("s", 35, "#E23D9F", "✒️AUTHOR", "center")
+        st.sidebar.markdown("---")
+        center_title("s", 35, "#E23D9F", "✒️ AUTHOR", "center")
 
         st.sidebar.link_button("Made by Akash",
                                url="https://akashportfolio.streamlit.app/",
