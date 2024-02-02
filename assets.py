@@ -82,7 +82,6 @@ class Fetch:
         return types
 
     def generate_pdf(self, df):
-        # df = pd.read_csv(filepath_or_buffer=st.session_state.user_csv, sep=",", index_col=None)
 
         pdf = FPDF(orientation="P", unit="mm", format="A4")
         pdf.add_page()
@@ -171,10 +170,9 @@ class Fetch:
         name = f"report{random.randint(100000000, 10000000000)}"
         pdf.output(name)
 
-        with open(name, "rb") as pdf_file:
-            PDFbyte = pdf_file.read()
+        PDFbyte = open(name, "rb").read()
 
-        # os.remove(name)
+        os.remove(name)
         return PDFbyte
 
 

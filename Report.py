@@ -33,9 +33,29 @@ def app():
 
             df_selection = df.query(
                 "Month == @month & Category == @category & Type == @exp_type")
-            print(path)
-            st.page_link(page="./main.py", label="Generate pdf")
-            st.page_link(page=str(path), label="Generate pdf")
+
+            # st.page_link(page="./main.py", label="Generate pdf")
+            # st.page_link(page="pages/pdf.py", label="Generate pdf")
+            def display(rep):
+                # rep = Upload()
+                PDFbyte = rep.generate_pdf(df_selection)
+                base64_pdf = base64.b64encode(PDFbyte).decode('utf-8')
+
+                pdf_display = F'<iframe src="data:application/pdf;base64,{base64_pdf}" width="1300" height="1000" type="application/pdf"></iframe>'
+                # pdf_display = F'<object data={base64_pdf} type="application/pdf" width="100%" height="100%"><p>Alternative text - include a link <a href="myfile.pdf">to the PDF!</a></p></object>'
+                st.markdown(pdf_display, unsafe_allow_html=True)
+                down = st.download_button(label=":red[Download Report]",
+                                          data=PDFbyte,
+                                          file_name="report.pdf",
+                                          mime='application/octet-stream',
+                                          use_container_width=True)
+                if down:
+                    st.sidebar.success("Downloaded Successfully")
+
+            clicked = st.button(label="Generate Report", on_click= lambda: display(rep), use_container_width=True)
+
+            if clicked:
+                st.sidebar.success("Downloaded Successfully")
 
         center_title("s", 60, "#E23D9F", "📃Report", "center")
         co1, co2, co3 = st.columns([1, 8, 1])
