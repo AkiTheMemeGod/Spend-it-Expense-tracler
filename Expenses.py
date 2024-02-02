@@ -1,28 +1,43 @@
-from functions import *
+from assets import *
 
 
 def app():
-    st.title("Expense Tracker")
-    cat = "Expense"
+    c1, c2, c3 = st.columns([3, 7, 3])
+    with c2:
+        exp = Upload()
+        st.title("Expense Tracker")
+        cat = "Expense"
 
-    expense = get_types("dependencies/expense_types.txt")
+        # expense = get_types("dependencies/expense_types.txt")
 
-    types = st.selectbox(label="Select the type of expense:red[*]",
-                         options=expense, key="type1")
-    if types == "Other\n":
-        other = st.text_input(label="Enter the type of expense: ")
-        if other:
-            expense.append(f"{other}\n")
-            put_todos(expense, "dependencies/expense_types.txt")
-    amount = st.number_input(label="Amount:red[*]", placeholder="Enter the amount", key="amt", min_value=0,
-                             max_value=10000000000, value=None, format="%d")
-    desc = st.text_area(label="Description", placeholder="Tell something about your expense (optional)", key="desc")
-    col1, col2 = st.columns(2)
-    with col1:
-        clicked = st.button("Add Expense", on_click=lambda: track(cat, types, str(amount), desc), key="expense",
-                            use_container_width=True)
+        types = st.selectbox(label="Select the type of expense:red[*]",
+                             options=exp.types(cat.lower()),
+                             key="exp_type")
 
-    with col2:
-        st.button("Reset", on_click=reset_fields, use_container_width=True)
-    if clicked:
-        st.success("Recorded Successfully")
+        if types == "Other":
+            other = st.text_input(label="Enter the type of expense: ")
+            if other:
+                exp.add_type(cat, other)
+
+        amount = st.number_input(label="Amount:red[*]",
+                                 placeholder="Enter the amount",
+                                 key="exp_amt",
+                                 min_value=0,
+                                 max_value=10000000000,
+                                 value=None,
+                                 format="%d")
+
+        desc = st.text_area(label="Description",
+                            placeholder="Tell something about your expense..",
+                            key="exp_desc")
+        col1, col2 = st.columns(2)
+        with col1:
+            add_exp = st.button("Add Expense", use_container_width=True)
+
+        with col2:
+            st.button("Reset", on_click=reset_fields, use_container_width=True)
+
+        if add_exp:
+            exp.add_data(cat, types, str(amount), desc)
+            st.success("Recorded Successfully")
+
