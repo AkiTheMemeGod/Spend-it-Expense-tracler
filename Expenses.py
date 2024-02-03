@@ -14,7 +14,7 @@ def app():
                              options=exp.types(cat.lower()),
                              key="exp_type")
 
-        if types == "Other":
+        if types == "---Other---":
             other = st.text_input(label="Enter the type of expense: ")
             if other:
                 exp.add_type(cat, other)
