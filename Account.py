@@ -137,7 +137,7 @@ def app():
                 if st.button('Create my account', use_container_width=True):
                     if usr_pfp is not None and username != "" and password != "":
                         acc.account(username, password, email, usr_pfp.read())
-                        st.session_state["radios"].index = 0
+                        # st.session_state["radios"].index = 0
                     elif username != "" and password != "":
                         acc.account(username, password, email, open("dependencies/pfp.png", "rb").read())
                     else:
